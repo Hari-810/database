@@ -1,0 +1,88 @@
+A stored procedure is a precompiled collection of SQL statements that are stored and executed on the database server. 
+Stored procedures allow you to encapsulate complex SQL logic and operations into a reusable unit that can be invoked with a single call.
+
+
+Key Features of Stored Procedures:
+    Encapsulation of Logic:
+        Stored procedures allow you to group multiple SQL statements into a single procedure. This encapsulates the logic, making it easier to manage and maintain.
+    
+    Reusable Code:
+        Once created, a stored procedure can be called multiple times from different places in your application, reducing redundancy and promoting code reuse.
+    
+    Performance:
+        Stored procedures are precompiled and stored in the database, which can lead to performance improvements. The database server does not need to compile the SQL statements each time the procedure is executed.
+    
+    Security:
+        Stored procedures can enhance security by restricting direct access to tables. Users can be granted permissions to execute stored procedures without having direct access to the underlying tables.
+    
+    Parameters:
+        Stored procedures can accept input parameters and return output parameters, making them versatile for a wide range of operations.
+    
+    Error Handling:
+        You can include error handling and transaction management within stored procedures to handle complex logic and maintain data integrity.
+
+Basic Syntax
+
+    CREATE PROCEDURE procedure_name ([parameters])
+    BEGIN
+        -- SQL statements
+    END;
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+
+-- Create the Table
+
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    age INT,
+    country VARCHAR(100)
+);
+
+
+DELIMITER //
+-- Stored Procedure
+-- Create a stored procedure to add a new customer to the customers
+CREATE PROCEDURE AddCustomer(
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_age INT,
+    IN p_country VARCHAR(100)
+)
+BEGIN
+    INSERT INTO customers (first_name, last_name, age, country)
+    VALUES (p_first_name, p_last_name, p_age, p_country);
+END //
+
+DELIMITER ;
+
+-- DELIMITER //: Changes the statement delimiter to // so that the semicolons inside the procedure don't end the procedure prematurely.
+-- DELIMITER ;: Restores the delimiter to the default semicolon after the procedure definition.
+
+
+CALL AddCustomer('John', 'Doe', 30, 'USA');
+
+
+select * from customers;
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE AddCustomer
+
+Purpose: Defines a new stored procedure named AddCustomer.
+Syntax: CREATE PROCEDURE procedure_name (parameters) BEGIN ... END;
+Parameters:
+    IN p_first_name VARCHAR(100): An input parameter for the customer's first name.
+    IN p_last_name VARCHAR(100): An input parameter for the customer's last name.
+    IN p_age INT: An input parameter for the customer's age.
+    IN p_country VARCHAR(100): An input parameter for the customer's country.
+
+BEGIN ... END
+
+Purpose: Encloses the block of SQL statements that make up the body of the stored procedure.

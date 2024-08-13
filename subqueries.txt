@@ -1,0 +1,59 @@
+
+A subquery, also known as an inner query or nested query, is a query embedded within another SQL query. 
+It is used to retrieve data that will be used in the main (outer) query. 
+Subqueries can return individual values, multiple rows, or even entire result sets. 
+They are powerful tools for performing complex filtering, aggregation, and data comparison operations within a single SQL statement. 
+Subqueries can be categorized into single-row subqueries, multi-row subqueries, and correlated subqueries, each serving different purposes based on the data retrieval needs.
+
+
+
+//////////////////////////////////////////////////////////////////////
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    age INT,
+    country VARCHAR(100)
+);
+
+INSERT INTO customers (customer_id, first_name, last_name, age, country)
+VALUES
+    (1, 'John', 'Doe', 31, 'USA'),
+    (2, 'Robert', 'Luna', 22, 'USA'),
+    (3, 'David', 'Robinson', 22, 'UK'),
+    (4, 'John', 'Reinhardt', 25, 'UK'),
+    (5, 'Betty', 'Doe', 28, 'UAE');
+
+select * from customers;
+
+//////////////////////////////////////////////////////////////////////
+
+Single-row Subquery
+    Query: Find the first name of the customer who is the oldest in the database.
+
+    SELECT first_name
+    FROM customers
+    WHERE age = (SELECT MAX(age) FROM customers);
+
+    Description: The subquery returns the maximum age, and the outer query finds the customer with that age.
+
+Multi-row Subquery
+    Query: List the first names of customers who are from the same country as any customer older than 50.
+
+    SELECT first_name
+    FROM customers
+    WHERE country IN (SELECT country FROM customers WHERE age > 25);
+
+    Description: The subquery returns a list of countries where customers older than 25 live, and the outer query finds customers from those countries.
+
+
+
+Correlated Subquery
+    Query: Find customers whose age is greater than the average age of customers from their own country.
+
+    SELECT first_name, age, country
+    FROM customers c1
+    WHERE age > (SELECT AVG(age) FROM customers c2 WHERE c2.country = c1.country);
+
+    Description: The subquery calculates the average age for each country, and the outer query compares it with the age of customers from the same country.
