@@ -1,0 +1,41 @@
+What is Indexing?
+
+    Indexing is a database optimization technique used to speed up the retrieval of rows from a table. 
+    An index is a data structure that allows the database to find and access data more quickly. 
+    Without an index, the database has to perform a full table scan, meaning it checks every row to find the data it needs. 
+    Indexes help to improve the performance of query operations like SELECT, JOIN, WHERE, and ORDER BY.
+
+How Does Indexing Work?
+
+    Think of an index like the index of a book. 
+    Instead of searching through the entire book to find a topic, you look at the index to find the page number. 
+    Similarly, an index in a database allows the database to quickly find the location of the data.
+
+Types of Indexes
+
+    Primary Index (Clustered Index):
+
+        Automatically created when you define a primary key.
+        Organizes the data within the table itself based on the indexed column(s).
+        There can only be one clustered index per table because the table's rows can only be sorted in one order.
+
+    Secondary Index (Non-Clustered Index):
+
+        Does not alter the physical order of the table but creates a separate object within the table that points back to the original table rows.
+        Multiple non-clustered indexes can exist on a single table.
+
+    Unique Index:
+
+        Ensures that all values in the indexed column(s) are unique.
+        Can be applied to columns other than the primary key.
+
+Important Considerations
+    
+    Index Size: Indexes consume additional disk space. The more indexes you have, the more space they require.
+    
+    Maintenance Overhead: Indexes must be updated whenever the data in the indexed columns is modified, which can slow down INSERT, UPDATE, and DELETE operations.
+    
+    Choosing the Right Columns: Index columns that are frequently used in WHERE clauses, joins, and sorting operations (ORDER BY).
+
+
+    

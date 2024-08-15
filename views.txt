@@ -1,0 +1,120 @@
+What is a View in SQL?
+    A View in SQL is a virtual table that is based on the result set of a SQL query. 
+    It does not store data physically like a table but provides a way to present data from one or more tables in a specific format. 
+    Views are useful for simplifying complex queries, enhancing security by restricting access to specific columns or rows, and providing a consistent, abstracted layer for querying data.
+
+Why Use Views?
+
+    Simplification: Complex queries can be simplified by creating a view that encapsulates the complexity.
+
+    Security: Views can limit user access to specific rows or columns, hiding sensitive data.
+
+    Reusability: Repeatedly used queries can be stored as views, reducing redundancy.
+
+    Data Abstraction: Views provide a way to represent data in a format that is different from the underlying tables.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Create a View
+
+    To create a view, you use the CREATE VIEW statement, followed by the view name and the query that defines the view.
+
+
+    CREATE VIEW view_name AS
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition;
+
+*******************************************************************************************
+
+
+Creating a Simple View
+
+    Let's say you want to create a view that shows the customer names and their corresponding orders from the Customers and Orders tables.
+
+
+            CREATE VIEW CustomerOrders AS
+            SELECT Customers.CustomerName, Orders.OrderID, Orders.OrderDate
+            FROM Customers
+            JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+
+
+    CustomerOrders: This view combines data from Customers and Orders tables, showing each customer's name along with their order IDs and order dates.
+
+Selecting Data from a View
+
+            SELECT * FROM CustomerOrders;
+
+    This will return all the columns and rows defined by the CustomerOrders view.
+
+*******************************************************************************************
+
+Creating a View with a Condition
+    If you want to create a view that only shows orders that were made after 1996-07-05:
+
+            CREATE VIEW RecentOrders AS
+            SELECT Orders.OrderID, Orders.OrderDate, Customers.CustomerName
+            FROM Orders
+            JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+            WHERE Orders.OrderDate > '1996-07-05';
+
+    RecentOrders: This view only includes orders placed after 1996-07-05, along with the customer names.
+
+Filtering Data from a View
+
+            SELECT * FROM RecentOrders WHERE CustomerName = 'Antonio Moreno Taquería';
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Updating Data through a View
+
+    In some cases, you can also update the data in the underlying tables through a view, but this depends on the complexity of the view.
+    Simple views (with direct mapping to the underlying table columns) often allow updates, while more complex views (e.g., those involving joins, aggregates, or calculations) do not.
+
+
+Updating Data via a View
+    If you have a view that directly references a single table, such as:
+
+            CREATE VIEW CustomerDetails AS
+            SELECT CustomerID, CustomerName, City FROM Customers;
+
+    You can update data in the Customers table via this view:
+
+            UPDATE CustomerDetails
+            SET City = 'New York'
+            WHERE CustomerID = 1;
+
+    You can call the view like below:
+
+            SELECT * FROM CustomerDetails;
+
+
+
+Dropping a View
+    If you no longer need a view, you can remove it using the DROP VIEW statement.
+
+            DROP VIEW IF EXISTS RecentOrders;
+
+    This command will delete the RecentOrders view.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Summary:
+
+    Views are virtual tables created by a SQL query.
+    They simplify complex queries, enhance security, and provide a way to abstract data.
+    
+        Creating Views: Use CREATE VIEW followed by a SELECT query.
+        
+        Using Views: Query them like a regular table.
+        
+        Updating Views: Possible with simple views, but not with complex ones.
+        
+        Dropping Views: Use DROP VIEW to remove them when no longer needed.
+        
+    Views are powerful tools for managing and presenting data efficiently in SQL databases.

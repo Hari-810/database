@@ -1,0 +1,24 @@
+Each table has a primary key defined by NOT NULL values
+
+Table Relationships:
+    
+    Categories and Products:
+        One-to-Many relationship: A category can have multiple products. The CategoryID in Products is a foreign key referencing Categories.
+    
+    Customers and Orders:
+        One-to-Many relationship: A customer can place multiple orders. The CustomerID in Orders is a foreign key referencing Customers.
+    
+    Employees and Orders:
+        One-to-Many relationship: An employee can handle multiple orders. The EmployeeID in Orders is a foreign key referencing Employees.
+    
+    Orders and OrderDetails:
+        One-to-Many relationship: An order can have multiple order details. The OrderID in OrderDetails is a foreign key referencing Orders.
+    
+    Products and OrderDetails:
+        One-to-Many relationship: A product can appear in multiple order details. The ProductID in OrderDetails is a foreign key referencing Products.
+    
+    Shippers and Orders:
+        One-to-Many relationship: A shipper can handle multiple orders. The ShipperID in Orders is a foreign key referencing Shippers.
+    
+    Suppliers and Products:
+        One-to-Many relationship: A supplier can provide multiple products. The SupplierID in Products is a foreign key referencing Suppliers

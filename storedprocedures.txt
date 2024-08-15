@@ -20,7 +20,7 @@ Key Features of Stored Procedures:
     
     Error Handling:
         You can include error handling and transaction management within stored procedures to handle complex logic and maintain data integrity.
-
+ 
 Basic Syntax
 
     CREATE PROCEDURE procedure_name ([parameters])
@@ -29,60 +29,112 @@ Basic Syntax
     END;
 
 
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+Example: Creating a Stored Procedure
 
--- Create the Table
-
-CREATE TABLE customers (
-    customer_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    age INT,
-    country VARCHAR(100)
-);
+Suppose you want to create a stored procedure to get all orders placed by a specific customer. 
+Here’s how you could create it:
 
 
-DELIMITER //
--- Stored Procedure
--- Create a stored procedure to add a new customer to the customers
-CREATE PROCEDURE AddCustomer(
-    IN p_first_name VARCHAR(100),
-    IN p_last_name VARCHAR(100),
-    IN p_age INT,
-    IN p_country VARCHAR(100)
-)
+*******************************************************************************************
+
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerOrders(IN custID INT)
 BEGIN
-    INSERT INTO customers (first_name, last_name, age, country)
-    VALUES (p_first_name, p_last_name, p_age, p_country);
-END //
+    SELECT Orders.OrderID, Orders.OrderDate, Customers.CustomerName
+    FROM Orders
+    INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+    WHERE Orders.CustomerID = custID;
+END $$
 
 DELIMITER ;
 
--- DELIMITER //: Changes the statement delimiter to // so that the semicolons inside the procedure don't end the procedure prematurely.
--- DELIMITER ;: Restores the delimiter to the default semicolon after the procedure definition.
+*******************************************************************************************
+
+Explanation:
+    DELIMITER $$: Changes the statement delimiter to $$ so that the procedure can contain semicolons (;) without prematurely ending the procedure definition.
+    IN custID INT: Defines an input parameter named custID of type INT.
+    SELECT statement: Fetches orders for the given CustomerID.
+    END $$: Ends the procedure definition.
+    DELIMITER ;: Resets the delimiter back to the default ;.
 
 
-CALL AddCustomer('John', 'Doe', 30, 'USA');
+How to Use (Call) a Stored Procedure
+    Once you have created the stored procedure, you can call it using the CALL statement.
+
+    To get orders for a customer with CustomerID = 1:
+
+*******************************************************************************************
+
+    CALL GetCustomerOrders(1);
+
+*******************************************************************************************
 
 
-select * from customers;
 
 
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-CREATE PROCEDURE AddCustomer
+Creating a Stored Procedure with Multiple Statements
 
-Purpose: Defines a new stored procedure named AddCustomer.
-Syntax: CREATE PROCEDURE procedure_name (parameters) BEGIN ... END;
-Parameters:
-    IN p_first_name VARCHAR(100): An input parameter for the customer's first name.
-    IN p_last_name VARCHAR(100): An input parameter for the customer's last name.
-    IN p_age INT: An input parameter for the customer's age.
-    IN p_country VARCHAR(100): An input parameter for the customer's country.
+You can create a stored procedure that includes multiple SQL statements, such as inserting an order and returning the generated OrderID.
 
-BEGIN ... END
 
-Purpose: Encloses the block of SQL statements that make up the body of the stored procedure.
+*******************************************************************************************
+
+
+DELIMITER $$
+
+CREATE PROCEDURE AddOrder(
+    IN custID INT,
+    IN empID INT,
+    IN shipperID INT,
+    OUT newOrderID INT
+)
+BEGIN
+    -- Insert a new order
+    INSERT INTO Orders (CustomerID, EmployeeID, OrderDate, ShipperID)
+    VALUES (custID, empID, CURDATE(), shipperID);
+    
+    -- Retrieve the last inserted ID
+    SET newOrderID = LAST_INSERT_ID();
+END $$
+
+DELIMITER ;
+
+
+*******************************************************************************************
+
+
+Explanation:
+    OUT newOrderID INT: An output parameter that will store the newly inserted OrderID.
+    CURDATE(): Inserts the current date as the order date.
+    LAST_INSERT_ID(): Retrieves the last inserted ID in the current session, which is the new OrderID.
+
+Calling the Procedure and Getting the Output
+    To add a new order and get the generated OrderID:
+
+*******************************************************************************************
+
+SET @newOrderID = 0;
+
+CALL AddOrder(1, 2, 3, @newOrderID);
+
+SELECT @newOrderID;
+
+*******************************************************************************************
+
+Summary
+    Stored procedures are powerful tools for managing SQL operations efficiently and securely. 
+    They help in encapsulating logic, reusing code, and maintaining consistency in database operations. 
+    By using stored procedures, you can improve the performance and manageability of your database applications.
+
+
+
+
+
+

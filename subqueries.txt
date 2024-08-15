@@ -1,59 +1,120 @@
+What are Subqueries?
+    A subquery is a query nested inside another query, typically within a SELECT, INSERT, UPDATE, or DELETE statement. 
+    Subqueries can be used to perform complex queries by breaking them down into simpler parts. 
+    They can return a single value, a single row, a single column, or an entire table.
 
-A subquery, also known as an inner query or nested query, is a query embedded within another SQL query. 
-It is used to retrieve data that will be used in the main (outer) query. 
-Subqueries can return individual values, multiple rows, or even entire result sets. 
-They are powerful tools for performing complex filtering, aggregation, and data comparison operations within a single SQL statement. 
-Subqueries can be categorized into single-row subqueries, multi-row subqueries, and correlated subqueries, each serving different purposes based on the data retrieval needs.
+Types of Subqueries:
+    Single-Row Subqueries:
 
+        Returns a single row with one or more columns.
+        Often used with comparison operators like =, >, <, >=, <=, <>.
 
+Multiple-Row Subqueries:
 
-//////////////////////////////////////////////////////////////////////
+        Returns more than one row.
+        Typically used with IN, ANY, ALL, or EXISTS operators.
 
-CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    age INT,
-    country VARCHAR(100)
-);
+Multiple-Column Subqueries:
 
-INSERT INTO customers (customer_id, first_name, last_name, age, country)
-VALUES
-    (1, 'John', 'Doe', 31, 'USA'),
-    (2, 'Robert', 'Luna', 22, 'USA'),
-    (3, 'David', 'Robinson', 22, 'UK'),
-    (4, 'John', 'Reinhardt', 25, 'UK'),
-    (5, 'Betty', 'Doe', 28, 'UAE');
+        Returns more than one column.
+        Often used in WHERE or SELECT clauses.
 
-select * from customers;
+Correlated Subqueries:
 
-//////////////////////////////////////////////////////////////////////
+        A subquery that references columns from the outer query.
+        Executed once for each row in the outer query.
 
-Single-row Subquery
-    Query: Find the first name of the customer who is the oldest in the database.
+Scalar Subqueries:
 
-    SELECT first_name
-    FROM customers
-    WHERE age = (SELECT MAX(age) FROM customers);
-
-    Description: The subquery returns the maximum age, and the outer query finds the customer with that age.
-
-Multi-row Subquery
-    Query: List the first names of customers who are from the same country as any customer older than 50.
-
-    SELECT first_name
-    FROM customers
-    WHERE country IN (SELECT country FROM customers WHERE age > 25);
-
-    Description: The subquery returns a list of countries where customers older than 25 live, and the outer query finds customers from those countries.
+    Returns a single value (a single cell).
+    Can be used anywhere a single value is expected, like in SELECT or WHERE clauses.
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Create and Use Subqueries
+
+
+*******************************************************************************************
+
+
+Single-Row Subquery
+    Example: Find the name of the customer who placed the order with OrderID = 10248.
+
+            SELECT CustomerName
+            FROM Customers
+            WHERE CustomerID = (SELECT CustomerID FROM Orders WHERE OrderID = 10248);
+
+
+    The inner query (SELECT CustomerID FROM Orders WHERE OrderID = 10248) returns the CustomerID for OrderID = 10248.
+    The outer query uses this CustomerID to find the CustomerName.
+
+*******************************************************************************************
+
+Multiple-Row Subquery
+    Example: Find the names of customers who placed orders handled by EmployeeID = 3.
+
+            SELECT CustomerName
+            FROM Customers
+            WHERE CustomerID IN (SELECT CustomerID FROM Orders WHERE EmployeeID = 3);
+    
+    The subquery returns a list of CustomerID values from Orders where EmployeeID = 3.
+    The outer query then finds the names of those customers.
+
+*******************************************************************************************
+
+Multiple-Column Subquery
+    Example: Find the CustomerName and ContactName of customers who placed orders on '1996-07-04'.
+
+            SELECT CustomerName, ContactName
+            FROM Customers
+            WHERE (CustomerID, CustomerName) IN
+            (SELECT CustomerID, CustomerName FROM Orders WHERE OrderDate = '1996-07-04');
+
+    The subquery returns both CustomerID and CustomerName for orders placed on '1996-07-04'.
+    The outer query matches both values in the Customers table.
+
+    
+*******************************************************************************************
 
 Correlated Subquery
-    Query: Find customers whose age is greater than the average age of customers from their own country.
+    Example: List all customers with orders greater than 5 items.
 
-    SELECT first_name, age, country
-    FROM customers c1
-    WHERE age > (SELECT AVG(age) FROM customers c2 WHERE c2.country = c1.country);
+            SELECT CustomerName
+            FROM Customers c
+            WHERE 5 < (SELECT COUNT(*) FROM Orders o WHERE o.CustomerID = c.CustomerID);
 
-    Description: The subquery calculates the average age for each country, and the outer query compares it with the age of customers from the same country.
+    The subquery is correlated because it references c.CustomerID from the outer query.
+    For each row in Customers, the subquery counts the number of orders for that customer, returning those with more than 5 orders.
+        
+*******************************************************************************************
+
+Scalar Subquery
+    Example: Get the price of the product with ProductID = 10.
+
+            SELECT ProductName, 
+            (SELECT Price FROM Products WHERE ProductID = 10) AS ProductPrice
+            FROM Products
+            WHERE ProductID = 10;
+
+    The subquery returns a single value (price of the product) which is then used in the SELECT clause.
+        
+*******************************************************************************************
+
+
+Practical Uses of Subqueries
+    Filtering Data: Subqueries are commonly used in the WHERE clause to filter data based on complex conditions.
+    Aggregating Data: Subqueries can be used to perform calculations or aggregations that are then used in the main query.
+    Complex Joins: Subqueries can replace joins in some scenarios where a direct join might not be possible or efficient.
+
+
+Considerations
+    Performance: Subqueries, especially correlated ones, can be slow. In some cases, a JOIN might be more efficient.
+    Readability: While subqueries can simplify complex logic, they can also make a query harder to understand if overused.
+    By understanding and using these different types of subqueries, you can handle a wide range of database queries and perform complex operations efficiently.
+
+
+
+
+
+
