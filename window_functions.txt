@@ -1,0 +1,128 @@
+Window Functions?
+    Window functions, also known as analytic functions, are a powerful feature in SQL that allows you to perform calculations across a set of table rows that are related to the current row. 
+    Unlike aggregate functions like SUM, AVG, or COUNT, which return a single result for a group of rows, window functions return a value for each row while still considering a broader set of data.
+
+
+Components of Window Functions:
+
+    A window function typically consists of the following components:
+
+    Function: The aggregate or ranking function you want to apply (e.g., ROW_NUMBER, RANK, SUM, AVG).
+    
+    OVER() Clause: Defines the window or set of rows the function should operate over.
+    
+    PARTITION BY Clause (Optional): Divides the result set into partitions to which the function is applied.
+    
+    ORDER BY Clause (Optional): Defines the order of rows within each partition.
+
+Common Window Functions:
+
+    ROW_NUMBER(): Assigns a unique number to each row within a partition, starting from 1.
+    
+    RANK(): Assigns a rank to each row within a partition, with possible gaps in the rank values.
+    
+    DENSE_RANK(): Similar to RANK(), but without gaps in the rank values.
+    
+    SUM(), AVG(), COUNT(): Aggregate functions that operate over a window of rows.
+    
+    LEAD() and LAG(): Access data from the next or previous row in the result set.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Rank Employees by Number of Orders Handled
+
+    rank employees based on the number of orders they have handled.
+
+
+            SELECT 
+                e.EmployeeID,
+                e.FirstName,
+                e.LastName,
+                COUNT(o.OrderID) AS TotalOrders,
+                RANK() OVER (ORDER BY COUNT(o.OrderID) DESC) AS EmployeeRank
+            FROM 
+                Employees e
+            LEFT JOIN 
+                Orders o ON e.EmployeeID = o.EmployeeID
+            GROUP BY 
+                e.EmployeeID, e.FirstName, e.LastName
+            ORDER BY 
+                EmployeeRank;
+
+    RANK() OVER (ORDER BY COUNT(o.OrderID) DESC): This ranks the employees based on the total number of orders they handled, with the highest number ranked first.
+
+
+Calculate Running Total of Orders per Customer
+    calculate a running total of orders placed by each customer over time.
+
+            SELECT 
+                c.CustomerID,
+                c.CustomerName,
+                o.OrderID,
+                o.OrderDate,
+                SUM(o.OrderID) OVER (PARTITION BY c.CustomerID ORDER BY o.OrderDate) AS RunningTotalOrders
+            FROM 
+                Customers c
+            JOIN 
+                Orders o ON c.CustomerID = o.CustomerID
+            ORDER BY 
+                c.CustomerID, o.OrderDate;
+
+    SUM(o.OrderID) OVER (PARTITION BY c.CustomerID ORDER BY o.OrderDate): This calculates a running total of the orders placed by each customer, ordered by the OrderDate.
+
+
+
+Get the Most Recent Order Date per Customer
+    You might want to find the most recent order date for each customer.
+
+        SELECT 
+            c.CustomerID,
+            c.CustomerName,
+            o.OrderID,
+            o.OrderDate,
+            MAX(o.OrderDate) OVER (PARTITION BY c.CustomerID) AS MostRecentOrderDate
+        FROM 
+            Customers c
+        JOIN 
+            Orders o ON c.CustomerID = o.CustomerID;
+
+    MAX(o.OrderDate) OVER (PARTITION BY c.CustomerID): This gives the most recent order date for each customer across all their orders.
+
+
+
+Identify Products with Above-Average Prices per Category
+    identify products that have above-average prices within their category.
+
+        SELECT 
+            p.ProductID,
+            p.ProductName,
+            p.CategoryID,
+            p.Price,
+            AVG(p.Price) OVER (PARTITION BY p.CategoryID) AS AvgCategoryPrice,
+            CASE 
+                WHEN p.Price > AVG(p.Price) OVER (PARTITION BY p.CategoryID) THEN 'Above Average'
+                ELSE 'Below or Equal to Average'
+            END AS PriceComparison
+        FROM 
+            Products p;
+
+
+    AVG(p.Price) OVER (PARTITION BY p.CategoryID): This calculates the average price of products within each category.
+    CASE statement: This identifies whether the product price is above or below the average price within its category.
+
+
+Why Use Window Functions?
+    Maintain Row Visibility: 
+        Unlike aggregate functions that reduce the number of rows, window functions preserve the visibility of each row.
+    
+    Flexible Analysis: 
+        They allow you to perform complex calculations like running totals, moving averages, and rankings directly in your query.
+    
+    Partitioned Data: 
+        They are particularly useful for calculating metrics within specific segments or partitions of your data.
+
+
+Conclusion
+    Window functions add significant analytical power to SQL queries, allowing you to perform complex calculations across rows in a flexible and efficient manner. 
+    They are particularly useful when you need to perform calculations that involve comparisons between rows or need a combination of detailed row-level data with summary statistics.
