@@ -120,13 +120,17 @@ Calling the Procedure and Getting the Output
 
 *******************************************************************************************
 
-SET @newOrderID = 0;
+            SET @newOrderID = 0;  
 
-CALL AddOrder(1, 2, 3, @newOrderID);
+            CALL AddOrder(1, 2, 3, @newOrderID);
 
-SELECT @newOrderID;
+            SELECT @newOrderID;
 
 *******************************************************************************************
+
+The code first initializes a variable @newOrderID to store a value.
+It then calls the AddOrder stored procedure, which likely inserts a new order into the database and assigns the new order ID to @newOrderID.
+Finally, the code retrieves and displays the new order ID by selecting @newOrderID.
 
 Summary
     Stored procedures are powerful tools for managing SQL operations efficiently and securely. 
