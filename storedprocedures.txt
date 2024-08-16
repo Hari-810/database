@@ -65,11 +65,11 @@ Explanation:
 How to Use (Call) a Stored Procedure
     Once you have created the stored procedure, you can call it using the CALL statement.
 
-    To get orders for a customer with CustomerID = 1:
+    To get orders for a customer with CustomerID = 90:
 
 *******************************************************************************************
 
-    CALL GetCustomerOrders(1);
+    CALL GetCustomerOrders(90);
 
 *******************************************************************************************
 
