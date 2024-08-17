@@ -52,6 +52,7 @@ Rank Employees by Number of Orders Handled
 
     RANK() OVER (ORDER BY COUNT(o.OrderID) DESC): This ranks the employees based on the total number of orders they handled, with the highest number ranked first.
 
+*******************************************************************************************
 
 Calculate Running Total of Orders per Customer
     calculate a running total of orders placed by each customer over time.
@@ -71,25 +72,25 @@ Calculate Running Total of Orders per Customer
 
     SUM(o.OrderID) OVER (PARTITION BY c.CustomerID ORDER BY o.OrderDate): This calculates a running total of the orders placed by each customer, ordered by the OrderDate.
 
-
+*******************************************************************************************
 
 Get the Most Recent Order Date per Customer
     You might want to find the most recent order date for each customer.
 
-        SELECT 
-            c.CustomerID,
-            c.CustomerName,
-            o.OrderID,
-            o.OrderDate,
-            MAX(o.OrderDate) OVER (PARTITION BY c.CustomerID) AS MostRecentOrderDate
-        FROM 
-            Customers c
-        JOIN 
-            Orders o ON c.CustomerID = o.CustomerID;
+            SELECT 
+                c.CustomerID,
+                c.CustomerName,
+                o.OrderID,
+                o.OrderDate,
+                MAX(o.OrderDate) OVER (PARTITION BY c.CustomerID) AS MostRecentOrderDate
+            FROM 
+                Customers c
+            JOIN 
+                Orders o ON c.CustomerID = o.CustomerID;
 
     MAX(o.OrderDate) OVER (PARTITION BY c.CustomerID): This gives the most recent order date for each customer across all their orders.
 
-
+*******************************************************************************************
 
 Identify Products with Above-Average Prices per Category
     identify products that have above-average prices within their category.
@@ -111,6 +112,7 @@ Identify Products with Above-Average Prices per Category
     AVG(p.Price) OVER (PARTITION BY p.CategoryID): This calculates the average price of products within each category.
     CASE statement: This identifies whether the product price is above or below the average price within its category.
 
+*******************************************************************************************
 
 Why Use Window Functions?
     Maintain Row Visibility: 

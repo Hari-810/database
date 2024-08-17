@@ -9,25 +9,25 @@ Types of Subqueries:
         Returns a single row with one or more columns.
         Often used with comparison operators like =, >, <, >=, <=, <>.
 
-Multiple-Row Subqueries:
+    Multiple-Row Subqueries:
 
         Returns more than one row.
         Typically used with IN, ANY, ALL, or EXISTS operators.
 
-Multiple-Column Subqueries:
+    Multiple-Column Subqueries:
 
         Returns more than one column.
         Often used in WHERE or SELECT clauses.
 
-Correlated Subqueries:
+    Correlated Subqueries:
 
         A subquery that references columns from the outer query.
         Executed once for each row in the outer query.
 
-Scalar Subqueries:
+    Scalar Subqueries:
 
-    Returns a single value (a single cell).
-    Can be used anywhere a single value is expected, like in SELECT or WHERE clauses.
+        Returns a single value (a single cell).
+        Can be used anywhere a single value is expected, like in SELECT or WHERE clauses.
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
