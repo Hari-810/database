@@ -1,0 +1,52 @@
+Q: Show the total number of admissions
+A:          SELECT count(*) as admissions_count FROM admissions;
+
+
+
+Q: Show all the columns from admissions where the patient was admitted and discharged on the same day.
+A:          select * from admissions where admission_date = discharge_date;
+
+
+
+Q: Show the patient id and the total number of admissions for patient_id 579.
+A:          SELECT patient_id, COUNT(*) AS total_admissions FROM admissions WHERE patient_id = 579;
+
+
+
+Q: Based on the cities that our patients live in, show unique cities that are in province_id 'NS'?
+A:          select distinct(city)  from patients where province_id = "NS";
+
+
+
+Q: Write a query to find the first_name, last name and birth date of patients who has height greater than 160 and weight greater than 70
+A:          select first_name, last_name, birth_date from patients where (height>160 and weight >70);
+
+
+
+Q: Write a query to find list of patients first_name, last_name, and allergies where allergies are not null and are from the city of 'Hamilton'
+A:          SELECT first_name,last_name, allergies FROM patients WHERE city = 'Hamilton' and allergies is not null
+
+
+
+Q: Show unique birth years from patients and order them by ascending.
+A:          select distinct year(birth_date) as birth_year from patients order by  birth_year asc;
+
+
+
+Q: Show unique first names from the patients table which only occurs once in the list.
+For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list. If only 1 person is named 'Leo' then include them in the output.
+A:          select first_name from patients group by first_name having count (first_name) =1
+
+
+
+Q: Show patient_id and first_name from patients where their first_name start and ends with 's' and is at least 6 characters long.
+A:          select patient_id, first_name from patients where first_name like "s%%s" and len(first_name)>5;
+
+
+
+Q: Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'.
+A:          select p.patient_id, p.first_name, p.last_name from patients as p join admissions  as a on a.patient_id = p.patient_id where a.diagnosis = "Dementia"
+
+
+Q: Display every patient's first_name. Order the list by the length of each name and then by alphabetically.
+A:          select first_name from patients order by len(first_name), first_name asc
