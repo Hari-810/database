@@ -1,0 +1,54 @@
+Transactions and Concurrency Control:
+
+Transactions:
+
+A transaction is a sequence of one or more SQL operations executed as a single unit.
+
+    Transactions ensure that the database remains consistent even in case of errors, system crashes, or concurrent access by multiple users.
+
+    The key properties of transactions are captured by the ACID principles:
+
+        Atomicity: All operations within a transaction are treated as a single unit. Either all of them are executed, or none.
+
+        Consistency: A transaction must leave the database in a consistent state.
+
+        Isolation: Transactions are isolated from each other, meaning the operations of one transaction cannot interfere with those of another.
+
+        Durability: Once a transaction is committed, its effects are permanent, even in the case of a system crash.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            -- Drop the table if it already exists (optional)
+            DROP TABLE IF EXISTS original_table;
+
+            CREATE TABLE original_table (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL
+            );
+
+            INSERT INTO original_table (name, email, password) VALUES
+                ('Alice', 'alice@example.com', 'password123'),
+                ('Bob', 'bob@example.com', 'password456');
+
+            SELECT * FROM original_table;
+
+            START TRANSACTION;
+
+            UPDATE original_table SET name = 'Alice Updated' WHERE id = 1;
+
+            DELETE FROM original_table WHERE id = 2;
+
+            -- To retrieve the original state of the table (after rollback):
+            SELECT * FROM original_table;
+
+            ROLLBACK;
+
+            -- To verify the rollback, select again:
+            SELECT * FROM original_table;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
