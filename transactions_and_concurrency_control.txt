@@ -1,5 +1,8 @@
 Transactions and Concurrency Control:
 
+Transactions in databases are essential for ensuring data integrity and consistency, especially when multiple operations are performed simultaneously.
+
+
 Transactions:
 
 A transaction is a sequence of one or more SQL operations executed as a single unit.
